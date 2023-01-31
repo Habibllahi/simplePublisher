@@ -30,11 +30,11 @@ public class UserService {
         try {
             var recoverableChannel = this.connection.createChannel();
             box.setChannel(recoverableChannel);
-            userMessage.publishMessage(box.getChannel(), user);
+            this.userMessage.publishMessage(box.getChannel(), user);
             box.getServiceResponse().setUser(user);
         } catch (IOException e) {
             box.getServiceResponse().setErrorMessage(e.getMessage());
-            logger.error(e.getMessage(),e);
+            this.logger.error(e.getMessage(),e);
         }
     }
 }

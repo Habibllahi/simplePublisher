@@ -22,18 +22,14 @@ import static com.codetrik.Constants.*;
 public class UserMessage implements Message<User> {
     private Logger logger = LoggerFactory.getLogger("UserMessage");
     @Override
-    public void publishMessage(Channel channel, User user) {
-        try {
+    public void publishMessage(Channel channel, User user) throws IOException {
             var mapper = new ObjectMapper();
             channel.queueDeclare(USER_QUEUE,false,false,false,null);
             channel.basicPublish("",USER_QUEUE,null,mapper.writeValueAsBytes(user));
-        } catch (IOException e) {
-            logger.error(e.getMessage(),e);
-        }
     }
 
     @Override
-    public void consumeMessage(Channel channel) {
-
+    public User consumeMessage(Channel channel) {
+        return null;
     }
 }

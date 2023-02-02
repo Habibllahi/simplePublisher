@@ -1,5 +1,6 @@
 package com.codetrik.simplePublisher.service;
 
+import com.codetrik.Blocker;
 import com.codetrik.Message;
 import com.codetrik.dto.LoanApplication;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -15,6 +16,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.atomic.AtomicReference;
 
 import static com.codetrik.Constants.*;
@@ -43,10 +46,11 @@ public class LoanMessage implements Message<LoanApplication> {
     }
 
     @Override
-    public LoanApplication consumeMessage(Channel channel) throws IOException {
+    public LoanApplication consumeMessage(Channel channel) throws Exception {
             var mapper = new ObjectMapper();
 
-            AtomicReference<LoanApplication> atomicLoanApplication = new AtomicReference<>();
+            BlockingQueue<LoanApplication> atomicLoanApplication = new ArrayBlockingQueue<>(1);
+        Blocker<LoanApplication> blocker = new Blocker<>(atomicLoanApplication);
 
             var replyToQueueDeclare = channel.queueDeclare(LOAN_TEMP_QUEUE,false,
                     false,false,null); //declare a server-named Queue and get the Queue name
@@ -54,8 +58,7 @@ public class LoanMessage implements Message<LoanApplication> {
             DeliverCallback deliveryCallback = (consumerTag, message)->{
                 if(message.getProperties().getCorrelationId().equals(CORRELATION_ID_1)){
                     var data = mapper.readValue(message.getBody(),LoanApplication.class);
-                    atomicLoanApplication.set(data);
-                    this.logger.info("[FEEDBACK] message got processed is: "+ data.getResponse().getOk().booleanValue());
+                    blocker.putDataInBlockingQueue(data);
                 }
             };
 
@@ -64,6 +67,6 @@ public class LoanMessage implements Message<LoanApplication> {
             //This call is async, you are rest assure it will do the job (deliveryCallback or cancelCallBack)
             // later in future when message become available
             channel.basicConsume(LOAN_TEMP_QUEUE,true,deliveryCallback,cancelCallback);
-            return null;
+            return blocker.takeDataInBlockingQueue();
     }
 }

@@ -38,10 +38,15 @@ public class LoanService {
 
     public void consumeLoanApplicationFeedback(SimplePublisherServiceBox box){
         try {
-            var recoverableChannel = this.connection.createChannel();
-            box.setChannel(recoverableChannel);
-            this.loanMessage.consumeMessage(box.getChannel());
-        } catch (IOException e) {
+            var recoverableChannel = this.connection.openChannel(100);
+            if(recoverableChannel.isPresent()){
+                box.setChannel(recoverableChannel.get());
+                var loanApplication = this.loanMessage.consumeMessage(box.getChannel());
+                box.getServiceResponse().setLoanApplication(loanApplication);
+            }else{
+                logger.info("[CHANNEL] MQ channel 100 creation failed ");
+            }
+        } catch (Exception e) {
             box.getServiceResponse().setErrorMessage(e.getMessage());
             logger.error(e.getMessage(),e);
         }

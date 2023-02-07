@@ -3,6 +3,7 @@ package com.codetrik.simplePublisher.service;
 import com.codetrik.Message;
 import com.codetrik.dto.User;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.rabbitmq.client.AMQP;
 import com.rabbitmq.client.Channel;
 import lombok.Getter;
 import lombok.Setter;
@@ -29,7 +30,7 @@ public class UserMessage implements Message<User> {
     }
 
     @Override
-    public User consumeMessage(Channel channel) {
-        return null;
+    public void consumeMessage(Channel channel) {
+
     }
 }

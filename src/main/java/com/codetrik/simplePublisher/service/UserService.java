@@ -2,7 +2,6 @@ package com.codetrik.simplePublisher.service;
 
 import com.codetrik.dto.User;
 import com.codetrik.simplePublisher.setup.SimplePublisherServiceBox;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.rabbitmq.client.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -10,8 +9,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
-
-import static com.codetrik.Constants.*;
 
 @Service
 @Qualifier("user-service")

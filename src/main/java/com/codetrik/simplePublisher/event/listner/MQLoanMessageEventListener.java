@@ -8,7 +8,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class MQLoanMessageEventListener implements ApplicationListener<MQLoanMessageEvent> {
-    private Logger logger = LoggerFactory.getLogger("MQLoanMessageEventListener");
+    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
     @Override
     public void onApplicationEvent(MQLoanMessageEvent event) {
         logger.info("[LOAN MESSAGE ACKNOWLEDGE] loan acknowledge status is " + event.getLoanMQMessage().getMessage().getResponse().getOk());

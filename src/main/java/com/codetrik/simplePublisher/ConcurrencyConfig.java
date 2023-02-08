@@ -6,14 +6,17 @@ import org.springframework.context.annotation.Configuration;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.codetrik.BeanQualifier.RABBIT_MQ_EXECUTOR;
+import static com.codetrik.BeanQualifier.SERVICE_EXECUTOR;
+
 @Configuration
 public class ConcurrencyConfig {
 
-    @Bean("rabbitmq-executor")
+    @Bean(RABBIT_MQ_EXECUTOR)
     public ExecutorService newFixedThreadPool(){
         return Executors.newFixedThreadPool(10);
     }
-    @Bean("service-executor")
+    @Bean(SERVICE_EXECUTOR)
     public ExecutorService newScheduledThreadPool(){
         return Executors.newScheduledThreadPool(10);
     }

@@ -10,15 +10,19 @@ import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 
+import static com.codetrik.BeanQualifier.RABBIT_MQ_CONNECTION;
+import static com.codetrik.BeanQualifier.USER_MESSAGE;
+import static com.codetrik.BeanQualifier.USER_SERVICE;
+
 @Service
-@Qualifier("user-service")
+@Qualifier(USER_SERVICE)
 public class UserService {
     private final UserMessage userMessage;
     private final Connection connection;
 
-    private Logger logger = LoggerFactory.getLogger("UserService");
+    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-    public UserService(@Qualifier("user-message") UserMessage userMessage, @Qualifier("rabbit-mq-connection") Connection connection) {
+    public UserService(@Qualifier(USER_MESSAGE) UserMessage userMessage, @Qualifier(RABBIT_MQ_CONNECTION) Connection connection) {
         this.userMessage = userMessage;
         this.connection = connection;
     }

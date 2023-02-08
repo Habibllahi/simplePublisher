@@ -11,15 +11,18 @@ import org.springframework.stereotype.Component;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
+import static com.codetrik.BeanQualifier.LOAN_SERVICE;
+import static com.codetrik.BeanQualifier.SERVICE_EXECUTOR;
+
 @Component
 public class LoanScheduler {
     private final LoanService loanService;
     private final ExecutorService executorService;
 
-    private Logger logger = LoggerFactory.getLogger("LoanScheduler");
+    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-    public LoanScheduler(@Qualifier("loan-service") LoanService loanService,
-                         @Qualifier("service-executor") ExecutorService executorService) {
+    public LoanScheduler(@Qualifier(LOAN_SERVICE) LoanService loanService,
+                         @Qualifier(SERVICE_EXECUTOR) ExecutorService executorService) {
         this.loanService = loanService;
         this.executorService = executorService;
     }

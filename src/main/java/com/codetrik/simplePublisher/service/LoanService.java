@@ -7,18 +7,21 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
-
 import java.io.IOException;
 
+import static com.codetrik.BeanQualifier.LOAN_MESSAGE;
+import static com.codetrik.BeanQualifier.LOAN_SERVICE;
+import static com.codetrik.BeanQualifier.RABBIT_MQ_CONNECTION;
+
 @Service
-@Qualifier("loan-service")
+@Qualifier(LOAN_SERVICE)
 public class LoanService {
     private final LoanMessage loanMessage;
     private final Connection connection;
 
-    private Logger logger = LoggerFactory.getLogger("UserService");
+    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-    public LoanService(@Qualifier("loan-message") LoanMessage loanMessage, @Qualifier("rabbit-mq-connection") Connection connection) {
+    public LoanService(@Qualifier(LOAN_MESSAGE) LoanMessage loanMessage, @Qualifier(RABBIT_MQ_CONNECTION) Connection connection) {
         this.loanMessage = loanMessage;
         this.connection = connection;
     }
@@ -29,6 +32,7 @@ public class LoanService {
             box.setChannel(recoverableChannel);
             this.loanMessage.publishMessage(box.getChannel(),loanApplication);
             box.getServiceResponse().setLoanApplication(loanApplication);
+            box.doPostProcessing();
         } catch (IOException e) {
             box.getServiceResponse().setErrorMessage(e.getMessage());
             logger.error(e.getMessage(),e);

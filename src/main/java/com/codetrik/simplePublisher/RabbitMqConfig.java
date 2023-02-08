@@ -15,6 +15,9 @@ import org.springframework.context.annotation.Scope;
 import java.io.IOException;
 import java.util.concurrent.ExecutorService;
 
+import static com.codetrik.BeanQualifier.RABBIT_MQ_CONNECTION;
+import static com.codetrik.BeanQualifier.RABBIT_MQ_EXECUTOR;
+
 
 @Configuration
 public class RabbitMqConfig {
@@ -22,10 +25,10 @@ public class RabbitMqConfig {
 
     private Logger logger = LoggerFactory.getLogger("RabbitMqConfig");
 
-    @Bean("rabbit-mq-connection")
-    @DependsOn("rabbitmq-executor")
+    @Bean(RABBIT_MQ_CONNECTION)
+    @DependsOn(RABBIT_MQ_EXECUTOR)
     @Scope("singleton")
-    public Connection connection(@Autowired @Qualifier("rabbitmq-executor") ExecutorService executorService){
+    public Connection connection(@Autowired @Qualifier(RABBIT_MQ_EXECUTOR) ExecutorService executorService){
         var optionalConnection =  sharedConnectionFactory(executorService).createConnection();
         this.openedConnection = optionalConnection.get();
         return this.openedConnection;

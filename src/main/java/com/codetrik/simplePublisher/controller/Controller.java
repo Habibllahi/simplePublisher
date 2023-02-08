@@ -16,6 +16,10 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.concurrent.ExecutorService;
 
+import static com.codetrik.BeanQualifier.LOAN_SERVICE;
+import static com.codetrik.BeanQualifier.SERVICE_EXECUTOR;
+import static com.codetrik.BeanQualifier.USER_SERVICE;
+
 @RestController
 @RequestMapping("/api/v1")
 public class Controller {
@@ -25,8 +29,8 @@ public class Controller {
     private final UserService userService;
     private final LoanService loanService;
 
-    public Controller(@Qualifier("service-executor") ExecutorService executorService, @Qualifier("user-service") UserService userService,
-                      @Qualifier("loan-service") LoanService loanService) {
+    public Controller(@Qualifier(SERVICE_EXECUTOR) ExecutorService executorService, @Qualifier(USER_SERVICE) UserService userService,
+                      @Qualifier(LOAN_SERVICE) LoanService loanService) {
         this.executorService = executorService;
         this.userService = userService;
         this.loanService = loanService;

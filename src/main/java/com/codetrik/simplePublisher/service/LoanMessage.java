@@ -16,6 +16,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -31,6 +32,7 @@ import static com.codetrik.Constants.LOAN_TEMP_QUEUE;
 @Getter
 @Setter
 @Qualifier(LOAN_MESSAGE)
+@Lazy
 public class LoanMessage implements Message<LoanApplication> {
     private final ApplicationEventPublisher applicationEventPublisher;
     private final ObjectMapper mapper;

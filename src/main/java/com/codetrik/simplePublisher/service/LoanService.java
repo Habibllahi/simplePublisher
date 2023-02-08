@@ -6,6 +6,7 @@ import com.rabbitmq.client.Connection;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 import java.io.IOException;
 
@@ -15,6 +16,7 @@ import static com.codetrik.BeanQualifier.RABBIT_MQ_CONNECTION;
 
 @Service
 @Qualifier(LOAN_SERVICE)
+@Lazy
 public class LoanService {
     private final LoanMessage loanMessage;
     private final Connection connection;

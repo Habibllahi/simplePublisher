@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ import static com.codetrik.Constants.USER_QUEUE;
 @Getter
 @Setter
 @Qualifier(USER_MESSAGE)
+@Lazy
 public class UserMessage implements Message<User> {
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
     private final ObjectMapper mapper;

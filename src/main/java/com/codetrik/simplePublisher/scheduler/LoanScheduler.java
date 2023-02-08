@@ -4,6 +4,7 @@ import com.codetrik.simplePublisher.service.LoanService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -17,14 +18,11 @@ import static com.codetrik.BeanQualifier.SERVICE_EXECUTOR;
 @Component
 public class LoanScheduler {
     private final LoanService loanService;
-    private final ExecutorService executorService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-    public LoanScheduler(@Qualifier(LOAN_SERVICE) LoanService loanService,
-                         @Qualifier(SERVICE_EXECUTOR) ExecutorService executorService) {
+    public LoanScheduler(@Qualifier(LOAN_SERVICE) LoanService loanService) {
         this.loanService = loanService;
-        this.executorService = executorService;
     }
 
     @Scheduled(fixedDelay = 2L, timeUnit = TimeUnit.SECONDS)

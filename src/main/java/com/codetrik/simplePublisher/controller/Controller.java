@@ -2,6 +2,7 @@ package com.codetrik.simplePublisher.controller;
 
 import com.codetrik.request.UserServiceRequest;
 import com.codetrik.response.UserServiceResponse;
+import com.codetrik.simplePublisher.service.InsuranceService;
 import com.codetrik.simplePublisher.service.LoanService;
 import com.codetrik.simplePublisher.service.UserService;
 import com.codetrik.simplePublisher.setup.SimplePublisherServiceBox;
@@ -16,6 +17,7 @@ import org.springframework.web.context.request.async.DeferredResult;
 
 import java.util.concurrent.ExecutorService;
 
+import static com.codetrik.BeanQualifier.CAR_INSURANCE_SERVICE;
 import static com.codetrik.BeanQualifier.LOAN_SERVICE;
 import static com.codetrik.BeanQualifier.SERVICE_EXECUTOR;
 import static com.codetrik.BeanQualifier.USER_SERVICE;
@@ -28,12 +30,14 @@ public class Controller {
     private final ExecutorService executorService;
     private final UserService userService;
     private final LoanService loanService;
+    private final InsuranceService insuranceService;
 
     public Controller(@Qualifier(SERVICE_EXECUTOR) ExecutorService executorService, @Qualifier(USER_SERVICE) UserService userService,
-                      @Qualifier(LOAN_SERVICE) LoanService loanService) {
+                      @Qualifier(LOAN_SERVICE) LoanService loanService,@Qualifier(CAR_INSURANCE_SERVICE) InsuranceService insuranceService) {
         this.executorService = executorService;
         this.userService = userService;
         this.loanService = loanService;
+        this.insuranceService = insuranceService;
     }
 
     @PostMapping("/user")
@@ -52,6 +56,20 @@ public class Controller {
 
     @PostMapping("/loan")
     public DeferredResult<ResponseEntity<UserServiceResponse>> postLoan(@RequestBody UserServiceRequest requestBody){
+        var result = new DeferredResult<ResponseEntity<UserServiceResponse>>();
+        var box = new SimplePublisherServiceBox(requestBody, new UserServiceResponse());
+        box.setExecutorService(this.executorService);
+        box.asyncSubmitProcess(()->{
+            //call service function
+            this.loanService.publishLoanApplication(box,requestBody.getLoanApplication());
+            result.setResult(new ResponseEntity<>(box.getServiceResponse(),HttpStatus.CREATED));
+        });
+        result.onCompletion(()-> box.doPostProcessing());
+        return result;
+    }
+
+    @PostMapping("/car-insurance")
+    public DeferredResult<ResponseEntity<UserServiceResponse>> postCarInsurance(@RequestBody UserServiceRequest requestBody){
         var result = new DeferredResult<ResponseEntity<UserServiceResponse>>();
         var box = new SimplePublisherServiceBox(requestBody, new UserServiceResponse());
         box.setExecutorService(this.executorService);

@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import static com.codetrik.BeanQualifier.CAR_INSURANCE_MESSAGE;
@@ -23,6 +24,7 @@ import static com.codetrik.Constants.INSURANCE_TEMP_QUEUE;
 @Getter
 @Setter
 @Qualifier(CAR_INSURANCE_MESSAGE)
+@Lazy
 public class CarInsuranceMessage implements Message<CarInsurance> {
 
     private final ApplicationEventPublisher applicationEventPublisher;

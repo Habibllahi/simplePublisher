@@ -1,35 +1,32 @@
 package com.codetrik.simplePublisher.scheduler;
 
-import com.codetrik.simplePublisher.service.LoanService;
+import com.codetrik.simplePublisher.service.InsuranceService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import static com.codetrik.BeanQualifier.ASYNC_SCHEDULER_EXECUTOR;
-import static com.codetrik.BeanQualifier.LOAN_SERVICE;
-import static com.codetrik.BeanQualifier.SERVICE_EXECUTOR;
+import static com.codetrik.BeanQualifier.CAR_INSURANCE_SERVICE;
 
 @Component
-public class LoanScheduler {
-    private final LoanService loanService;
+public class InsuranceScheduler {
+    private final InsuranceService insuranceService;
 
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
-    public LoanScheduler(@Qualifier(LOAN_SERVICE) LoanService loanService) {
-        this.loanService = loanService;
+    public InsuranceScheduler(@Qualifier(CAR_INSURANCE_SERVICE) InsuranceService insuranceService) {
+        this.insuranceService = insuranceService;
     }
 
     @Scheduled(fixedDelay = 2L, timeUnit = TimeUnit.SECONDS)
     @Async(ASYNC_SCHEDULER_EXECUTOR)
     public void processFeedBack(){
-        logger.info("[INFO] loan message feedback scheduler started successfully");
-        this.loanService.consumeLoanApplicationFeedback();
+        logger.info("[INFO] insurance message feedback scheduler started successfully");
+        this.insuranceService.consumeCarInsurance();
     }
 }

@@ -72,9 +72,6 @@ public class LoanMessage implements Message<LoanApplication> {
                     applicationEventPublisher.publishEvent(new MQLoanMessageEvent(this,new MQEvent<>(data)));
                     channel.basicAck(message.getEnvelope().getDeliveryTag(),false);
                 }
-                if(!(replyToQueueDeclare.getMessageCount() > 0)){
-                    SharedConnectionFactory.closeChannel(channel);
-                }
             };
             CancelCallback cancelCallback = (consumerTag)->{};
             //This call is async, you are rest assure it will do the job (deliveryCallback or cancelCallBack)

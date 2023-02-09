@@ -42,4 +42,13 @@ public class InsuranceService {
         }
     }
 
+    public void consumeCarInsurance(){
+        try{
+            var recoverableChanel = this.connection.createChannel();
+            this.carInsuranceMessage.consumeMessage(recoverableChanel);
+        }catch (Exception ex){
+            this.logger.error(ex.getMessage(),ex);
+        }
+    }
+
 }

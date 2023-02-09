@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Lazy;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.codetrik.BeanQualifier.ASYNC_SCHEDULER_EXECUTOR;
 import static com.codetrik.BeanQualifier.RABBIT_MQ_EXECUTOR;
 import static com.codetrik.BeanQualifier.SERVICE_EXECUTOR;
 
@@ -22,5 +23,10 @@ public class ConcurrencyConfig {
     @Lazy
     public ExecutorService newScheduledThreadPool(){
         return Executors.newScheduledThreadPool(10);
+    }
+
+    @Bean(ASYNC_SCHEDULER_EXECUTOR)
+    public ExecutorService asyncSchedulerThreadPool(){
+        return Executors.newScheduledThreadPool(2);
     }
 }

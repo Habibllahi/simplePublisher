@@ -10,7 +10,6 @@ public class MQCarInsuranceMessageEventListener implements ApplicationListener<M
 
     @Override
     public void onApplicationEvent(MQInsuranceMessageEvent event) {
-        logger.info("[CAR INSURANCE MESSAGE ACKNOWLEDGE] insurance with registration " +
-                event.getCarInsuranceMQMessage().getMessage().getRegistration() + " is processed");
+        logger.info("[INSURANCE MESSAGE ACKNOWLEDGE] insurance acknowledge status is " + event.getCarInsuranceMQMessage().getMessage().getResponse().getOk());
     }
 }

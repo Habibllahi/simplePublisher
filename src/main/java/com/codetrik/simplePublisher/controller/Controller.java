@@ -75,7 +75,7 @@ public class Controller {
         box.setExecutorService(this.executorService);
         box.asyncSubmitProcess(()->{
             //call service function
-            this.loanService.publishLoanApplication(box,requestBody.getLoanApplication());
+            this.insuranceService.publishCarInsurance(box,requestBody.getCarInsurance());
             result.setResult(new ResponseEntity<>(box.getServiceResponse(),HttpStatus.CREATED));
         });
         result.onCompletion(()-> box.doPostProcessing());

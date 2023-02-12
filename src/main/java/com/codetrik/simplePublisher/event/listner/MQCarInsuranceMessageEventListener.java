@@ -4,7 +4,9 @@ import com.codetrik.simplePublisher.event.MQInsuranceMessageEvent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationListener;
+import org.springframework.stereotype.Component;
 
+@Component
 public class MQCarInsuranceMessageEventListener implements ApplicationListener<MQInsuranceMessageEvent> {
     private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 

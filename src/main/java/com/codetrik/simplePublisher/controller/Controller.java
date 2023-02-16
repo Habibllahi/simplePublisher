@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.async.DeferredResult;
 
@@ -21,6 +22,8 @@ import static com.codetrik.BeanQualifier.CAR_INSURANCE_SERVICE;
 import static com.codetrik.BeanQualifier.LOAN_SERVICE;
 import static com.codetrik.BeanQualifier.SERVICE_EXECUTOR;
 import static com.codetrik.BeanQualifier.USER_SERVICE;
+import static com.codetrik.Constants.DEFAULT;
+import static com.codetrik.Constants.DIRECT;
 
 @RestController
 @RequestMapping("/api/v1")
@@ -41,13 +44,18 @@ public class Controller {
     }
 
     @PostMapping("/user")
-    public DeferredResult<ResponseEntity<UserServiceResponse>> postUser(@RequestBody UserServiceRequest requestBody){
+    public DeferredResult<ResponseEntity<UserServiceResponse>> postUser(@RequestBody UserServiceRequest requestBody,
+                                                                        @RequestParam(name="mode", required = false, defaultValue = DEFAULT)String mode){
         var result = new DeferredResult<ResponseEntity<UserServiceResponse>>();
         var box = new SimplePublisherServiceBox(requestBody, new UserServiceResponse());
         box.setExecutorService(this.executorService);
         box.asyncSubmitProcess(()->{
             //call service function
-            this.userService.publishUser(box,requestBody.getUser());
+            switch (mode){
+                case DEFAULT -> this.userService.publishUser(box,requestBody.getUser());
+                case DIRECT -> this.userService.publishUserDirect(box,requestBody.getUser());
+                default -> box.getServiceResponse().setErrorMessage("No mode match, hence cant publish message");
+            }
             result.setResult(new ResponseEntity<>(box.getServiceResponse(),HttpStatus.CREATED));
         });
         result.onCompletion(()-> box.doPostProcessing());

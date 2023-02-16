@@ -21,7 +21,7 @@ public class LoanService {
     private final LoanMessage loanMessage;
     private final Connection connection;
 
-    private Logger logger = LoggerFactory.getLogger(this.getClass().getName());
+    private final Logger logger = LoggerFactory.getLogger(this.getClass().getName());
 
     public LoanService(@Qualifier(LOAN_MESSAGE) LoanMessage loanMessage, @Qualifier(RABBIT_MQ_CONNECTION) Connection connection) {
         this.loanMessage = loanMessage;
@@ -48,7 +48,7 @@ public class LoanService {
             if(recoverableChannel.isPresent()){
                 this.loanMessage.consumeMessage(recoverableChannel.get());
             }else{
-                logger.info("[CHANNEL] MQ channel 100 creation failed ");
+                logger.info("[LOAN CHANNEL] MQ channel 100 creation failed ");
             }
         } catch (Exception e) {
             logger.error(e.getMessage(),e);
